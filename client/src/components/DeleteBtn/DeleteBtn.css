@@ -1,0 +1,9 @@
+.delete-btn {
+    float: right;
+    background-color: #D56A60;
+    color: white;
+    border: 2px solid antiquewhite;
+    border-radius: 5px;
+    padding: 5px;
+    text-align: center;
+  }
