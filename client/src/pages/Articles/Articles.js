@@ -107,7 +107,7 @@ saveArticle = id => {
               <h2>Results</h2>
             {this.state.articles.length ? (
               <List>
-                {this.state.articles.slice(0, 5).map(article => (
+                {this.state.articles.slice(0, 20).map(article => (
                   <ListItem key={article._id}>
                     <h5><strong>{article.headline.main}</strong>  <span className="date-span">{ (new Date(article.pub_date)).toLocaleDateString() }</span></h5>
                     <p>{article.snippet}</p>
