@@ -56,6 +56,7 @@ saveArticle = id => {
         if (res.data.status === "error") {
           throw new Error(res.data);
         }
+        //console.log(res)
         this.setState({ articles: res.data.response.docs, error: "" });
         this.setState({ start: "", end: "", topic: "" })
       })
