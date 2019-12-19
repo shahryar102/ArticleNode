@@ -14,8 +14,8 @@ class Articles extends Component {
     topic: ""
   };
 
-//saves the article information so that axios can send to the server side
-saveArticle = id => {
+  //saves the article information so that axios can send to the server side
+  saveArticle = id => {
     const save = this.state.articles.filter(article => article._id === id);
     if (save[0].headline.main && save[0].web_url) {
       API.saveArticle({
@@ -33,7 +33,7 @@ saveArticle = id => {
   filterArticle = id => {
     const articles = this.state.articles.filter(article => article._id !== id);
     this.setState({ articles });
-  }
+  };
 
   handleInputChange = event => {
     const { name, value } = event.target;
@@ -45,37 +45,51 @@ saveArticle = id => {
   //sets the user's search parameters to state so that the API call to NYT can be made
   handleFormSubmit = event => {
     event.preventDefault();
-    this.setState({ articles: [] })
+    this.setState({ articles: [] });
     if (this.state.topic) {
       API.getArticles({
         topic: this.state.topic,
         start: this.state.start,
         end: this.state.end
       })
-      .then(res => {
-        if (res.data.status === "error") {
-          throw new Error(res.data);
-        }
-        //console.log(res)
-        this.setState({ articles: res.data.response.docs, error: "" });
-        this.setState({ start: "", end: "", topic: "" })
-      })
-      .catch(err => this.setState({ error: err.message }));
+        .then(res => {
+          if (res.data.status === "error") {
+            throw new Error(res.data);
+          }
+          //console.log(res)
+          this.setState({ articles: res.data.response.docs, error: "" });
+          this.setState({ start: "", end: "", topic: "" });
+        })
+        .catch(err => this.setState({ error: err.message }));
     }
   };
 
   render() {
     return (
-    
-          <Container fluid>
-            <Row>
-              <Col size="md-11">
-                <Link to="/saved" className="pageLink"><i className="fa fa-bookmark"></i> Saved Articles</Link>
-              </Col>
-            </Row>        
-            <Row> 
-             <Col size="md-3">
-             <h2>Search for Articles</h2>
+      <Container fluid>
+        {/* <iframe width="100px" height="500px" src="https://make-my-article.herokuapp.com/">
+            <p>Your browser does not support iframes.</p>
+          </iframe> */}
+        <Row>
+          <Col size="md-11">
+            <a
+              href="https://make-my-article.herokuapp.com/"
+              className="pageLink-nodebook"
+            >
+              Write My Article
+            </a>
+          </Col>
+
+          <Col size="md-11">
+            <Link to="/saved" className="pageLink">
+              <i className="fa fa-bookmark"></i> Saved Articles
+            </Link>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col size="md-3">
+            <h2>Search for Articles</h2>
             <form>
               <Input
                 value={this.state.topic}
@@ -96,7 +110,9 @@ saveArticle = id => {
                 placeholder="End Year (YYYY)"
               />
               <FormBtn
-                disabled={!(this.state.topic && this.state.start && this.state.end)}
+                disabled={
+                  !(this.state.topic && this.state.start && this.state.end)
+                }
                 onClick={this.handleFormSubmit}
               >
                 Submit
@@ -105,14 +121,21 @@ saveArticle = id => {
           </Col>
           <Col size="md-1" />
           <Col size="md-6 sm-12">
-              <h2>Results</h2>
+            <h2>Results</h2>
             {this.state.articles.length ? (
               <List>
                 {this.state.articles.slice(0, 20).map(article => (
                   <ListItem key={article._id}>
-                    <h5><strong>{article.headline.main}</strong>  <span className="date-span">{ (new Date(article.pub_date)).toLocaleDateString() }</span></h5>
+                    <h5>
+                      <strong>{article.headline.main}</strong>{" "}
+                      <span className="date-span">
+                        {new Date(article.pub_date).toLocaleDateString()}
+                      </span>
+                    </h5>
                     <p>{article.snippet}</p>
-                    <a href={article.web_url}><p>{article.web_url}</p></a>
+                    <a href={article.web_url}>
+                      <p>{article.web_url}</p>
+                    </a>
                     <SaveBtn onClick={() => this.saveArticle(article._id)} />
                   </ListItem>
                 ))}
